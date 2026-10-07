@@ -6,9 +6,9 @@ Un mismo software que **crece**: v1 (estructuras simples) → v2 (jerárquicas) 
 
 | | |
 | --- | --- |
-| **Estudiante** | |
-| **Dominio** | |
-| **Repo** | |
+| **Estudiante** | Tu Nombre — Tu código |
+| **Dominio** | Sistema de atención de pacientes |
+| **Repo** | https://github.com/TU-USUARIO/sis211-proyecto2026 |
 
 ## Mapa v1 (mínimo tres familias distintas)
 
@@ -17,13 +17,15 @@ Familias: arreglo, lista, pila, cola, tabla hash.
 
 | Flujo del dominio | Qué llega / sale / se busca | Familia | La uso porque… |
 | --- | --- | --- | --- |
-| | | | |
-| | | | |
-| | | | |
+| El siguiente paciente a atender | Sale el primero que llegó; se respeta orden de llegada | cola | La sala de espera atiende por orden FIFO. |
+| Buscar un paciente por código o CI | Se busca por código/CI y se obtiene su ficha | tabla hash | Acceso rápido O(1) por clave única. |
+| Historial de atenciones de un paciente | Se guardan y recorren atenciones en orden cronológico | lista | Mantiene el orden de los eventos y permite recorrerlos. |
 
 Cómo probar un caso límite (vacío, no encontrado o duplicado):
 
-> …
+> Caso vacío: si la cola de espera está vacía y se pide el siguiente paciente, `ColaEspera.desencolar()` lanza `ValueError`.  
+> No encontrado: si se busca un código inexistente en `IndicePacientes.buscar()`, lanza `KeyError`.  
+> Duplicado: si se registra un paciente con código ya existente, `IndicePacientes.agregar()` lanza `ValueError`.
 
 ## Carpetas
 
