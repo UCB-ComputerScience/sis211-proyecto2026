@@ -6,9 +6,9 @@ Un mismo software que **crece**: v1 (estructuras simples) → v2 (jerárquicas) 
 
 | | |
 | --- | --- |
-| **Estudiante** | Tu Nombre — Tu código |
+| **Estudiante** | Alejandro Cruz |
 | **Dominio** | Sistema de atención de pacientes |
-| **Repo** | https://github.com/TU-USUARIO/sis211-proyecto2026 |
+| **Repo** | https://github.com/al3-cruz/sis211-proyecto2026 |
 
 ## Mapa v1 (mínimo tres familias distintas)
 
