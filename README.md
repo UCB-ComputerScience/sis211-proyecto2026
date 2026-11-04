@@ -2,7 +2,7 @@
 
 **Autor:** Luis Fabricio Rivero Aban
 
-**Materia:** SIS211 · Proyecto V2 (Unidad 3)
+**Materia:** SIS211 · Proyecto V2  (Unidad 3)
 
 ## Descripción
 
