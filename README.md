@@ -37,3 +37,20 @@ Cómo probar un caso límite (vacío, no encontrado o duplicado):
 - v1: clases en `.py` (POO). Entrega Moodle: **2026-10-07 23:59**.
 - Este README **no** sustituye la tarea de Moodle.
 - v2 y v3: otras branches, más adelante, a partir de `v1`.
+
+
+## v2 — Jerarquía (heap de prioridad)
+
+Branch: `v2` (desde `v1`). No se reescribe v1: se suma una jerarquía usada en un flujo.
+
+| Flujo del dominio | Qué llega / sale / se busca | Familia | La uso porque… |
+| --- | --- | --- | --- |
+| El siguiente paciente a atender por gravedad | Sale el paciente más urgente (menor número de prioridad) | heap (min-heap) | La sala de urgencias atiende primero a los críticos, no por orden de llegada. |
+
+**Clase nueva:** `ColaPrioridad` en `src/cola_prioridad.py`.  
+**Prioridades:** 1 = crítico, 2 = grave, 3 = normal, 4 = leve, 5 = mínimo.  
+**Empate:** se respeta el orden de llegada mediante un contador interno.
+
+Cómo probar un caso límite v2:
+
+> Si la `ColaPrioridad` está vacía y se llama `desencolar()`, lanza `ValueError`. Si se encolan prioridades 3, 1 y 5, el primero en salir es el 1. Si dos pacientes tienen la misma prioridad, sale primero el que llegó antes.
