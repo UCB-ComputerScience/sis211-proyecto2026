@@ -5,6 +5,7 @@ class Conductor:
         self.codigo = codigo
         self.nombre = nombre
         self.disponible = True
+        self.viajes = 0
  
     def __repr__(self):
         estado = "disponible" if self.disponible else "ocupado"

@@ -1,7 +1,7 @@
 from estructuras import Cola, Pila
 from dominio import Pedido
 from conductor import Conductor
-
+from heap_conductores import HeapConductores
 
 class SistemaTaxis:
     """
@@ -15,12 +15,14 @@ class SistemaTaxis:
         self.pedidos_pendientes = Cola()
         self.conductores = {}            # código -> Conductor
         self.asignaciones = Pila()       # (pedido, conductor)
+        self.heap_conductores = HeapConductores()
 
     # --- conductores (tabla hash) ---
     def registrar_conductor(self, codigo, nombre):
         if codigo in self.conductores:
             raise ValueError(f"Ya existe el conductor {codigo}")
         self.conductores[codigo] = Conductor(codigo, nombre)
+        self.heap_conductores.insertar(self.conductores[codigo])
 
     def buscar_conductor(self, codigo):
         return self.conductores.get(codigo)
@@ -43,6 +45,7 @@ class SistemaTaxis:
         pedido = self.pedidos_pendientes.desencolar()
         pedido.estado = "asignado"
         conductor.disponible = False
+        self.heap_conductores.eliminar(conductor)
         self.asignaciones.apilar((pedido, conductor))
         return pedido, conductor
 
@@ -55,4 +58,33 @@ class SistemaTaxis:
         conductor.disponible = True
         # era el más antiguo cuando se asignó: vuelve al frente de la cola
         self.pedidos_pendientes.encolar_al_frente(pedido)
+        self.heap_conductores.insertar(conductor)
         return pedido, conductor
+
+    # --- v2: conductor con menos viajes (heap) ---
+    def asignar_al_menos_cargado(self):
+        if self.pedidos_pendientes.esta_vacia():
+            raise IndexError("No hay pedidos pendientes")
+
+        while True:
+            conductor = self.heap_conductores.extraer()
+            if conductor is None:
+                return None
+            if conductor.disponible:
+                break
+
+        pedido = self.pedidos_pendientes.desencolar()
+        pedido.estado = "asignado"
+        conductor.disponible = False
+        self.asignaciones.apilar((pedido, conductor))
+        return pedido, conductor
+
+    def completar_viaje(self, codigo_conductor):
+        conductor = self.buscar_conductor(codigo_conductor)
+        if conductor is None:
+            raise KeyError(f"No existe el conductor {codigo_conductor}")
+        if conductor.disponible:
+            raise ValueError(f"El conductor {codigo_conductor} no tiene viaje")
+        conductor.disponible = True
+        conductor.viajes += 1
+        self.heap_conductores.insertar(conductor)
