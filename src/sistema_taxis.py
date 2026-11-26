@@ -2,6 +2,7 @@ from estructuras import Cola, Pila
 from dominio import Pedido
 from conductor import Conductor
 from heap_conductores import HeapConductores
+from grafo_mapa import GrafoMapa
 
 class SistemaTaxis:
     """
@@ -16,6 +17,7 @@ class SistemaTaxis:
         self.conductores = {}            # código -> Conductor
         self.asignaciones = Pila()       # (pedido, conductor)
         self.heap_conductores = HeapConductores()
+        self.mapa = GrafoMapa()          # lugares y calles de la ciudad
 
     # --- conductores (tabla hash) ---
     def registrar_conductor(self, codigo, nombre):
@@ -88,3 +90,38 @@ class SistemaTaxis:
         conductor.disponible = True
         conductor.viajes += 1
         self.heap_conductores.insertar(conductor)
+
+    # --- v3: rutas del viaje con el grafo del mapa ---
+    def registrar_lugar(self, lugar):
+        self.mapa.agregar_lugar(lugar)
+
+    def registrar_calle(self, a, b):
+        self.mapa.agregar_calle(a, b)
+
+    def calcular_ruta(self, origen, destino):
+        """Ruta con menos tramos entre origen y destino; None si no se llega."""
+        return self.mapa.camino_mas_corto(origen, destino)
+
+    def asignar_con_ruta(self, codigo_conductor):
+        """Asigna el siguiente pedido solo si existe ruta para su viaje.
+
+        Si el destino no se alcanza en el mapa (caso límite), el pedido
+        no se asigna y queda en la cola: el sistema no rompe.
+        """
+        conductor = self.buscar_conductor(codigo_conductor)
+        if conductor is None:
+            raise KeyError(f"No existe el conductor {codigo_conductor}")
+        if not conductor.disponible:
+            raise ValueError(f"El conductor {codigo_conductor} está ocupado")
+        if self.pedidos_pendientes.esta_vacia():
+            raise IndexError("No hay pedidos pendientes")
+
+        siguiente = next(iter(self.pedidos_pendientes))
+        ruta = self.mapa.camino_mas_corto(siguiente.origen, siguiente.destino)
+        if ruta is None:
+            raise ValueError(
+                f"Sin ruta de {siguiente.origen} a {siguiente.destino}: "
+                "el pedido sigue en la cola"
+            )
+        pedido, conductor = self.asignar_siguiente(codigo_conductor)
+        return pedido, conductor, ruta
