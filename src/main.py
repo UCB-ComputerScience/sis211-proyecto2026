@@ -21,4 +21,17 @@ print("Revertido:", pedido, "|", conductor)
 print("\n-- Pendientes ahora (el pedido 2 vuelve al frente) --")
 for p in s.pedidos_pendientes:
     print(p)
- 
+
+print("\n-- V3: rutas con el grafo del mapa --")
+s.registrar_calle("Plaza 25 de Mayo", "Mercado")
+s.registrar_calle("Mercado", "Hospital")
+s.registrar_calle("Hospital", "Plaza 25 de Mayo")  # ciclo: anillo de calles
+s.registrar_calle("Plaza 25 de Mayo", "Terminal")
+s.registrar_calle("Terminal", "Universidad")
+s.registrar_lugar("Aeropuerto")  # todavía sin calles: no se llega
+
+print("Ruta Plaza 25 de Mayo -> Universidad:",
+      s.calcular_ruta("Plaza 25 de Mayo", "Universidad"))
+print("Ruta Plaza 25 de Mayo -> Aeropuerto:",
+      s.calcular_ruta("Plaza 25 de Mayo", "Aeropuerto"),
+      "(sin ruta: caso límite)")
